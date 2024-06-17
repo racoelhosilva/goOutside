@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/racoelhosilva/GoOutside/placeholder"
+	"github.com/racoelhosilva/GoOutside/api"
 )
 
 func main() {
-	placeholder.Start()
-	fmt.Println("Go Outside :)")
-	placeholder.End()
+	fmt.Println(api.GetCurrent("Oporto"))
 }

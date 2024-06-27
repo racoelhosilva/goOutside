@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 type MarineWeather struct {
@@ -137,8 +138,28 @@ func main() {
 	fmt.Println(weather.Location.Name, weather.Location.Country)
 	for _, day := range weather.Forecast.Forecastday {
 		fmt.Printf("%-12s %.1fºC  %s\n", day.Date, day.Day.AvgtempC, day.Day.Condition.Text)
+		
+		astroLayout := "03:04 PM"
+		sunrise, err := time.Parse(astroLayout, day.Astro.Sunrise)
+		if err != nil {
+			panic(err)
+		}
+		sunset, err := time.Parse(astroLayout, day.Astro.Sunset)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("  Sunrise: %02d:%02d  Sunset: %02d:%02d\n", sunrise.Hour(), sunrise.Minute(), sunset.Hour(), sunset.Minute())
+		
 		for _, tide := range day.Day.Tides[0].Tide {
-			fmt.Printf("%-10s %s\n", tide.TideType, tide.TideTime)
+			layout := "2006-01-02 15:04"
+			t, err := time.Parse(layout, tide.TideTime)
+		
+			if err != nil {
+				panic(err)
+			}
+		
+			fmt.Printf("    %-10s %02d:%02d\n", tide.TideType, t.Hour(), t.Minute())
 		}
 	}
 }
